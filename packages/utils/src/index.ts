@@ -1,4 +1,4 @@
-export * from './crypto';
-export * from './storage';
-export * from './nanoid';
-export * from './klona';
+export { Crypto } from './crypto';
+export { createStorage, createLocalforage } from './storage';
+export { nanoid } from './nanoid';
+export { jsonClone } from './klona';

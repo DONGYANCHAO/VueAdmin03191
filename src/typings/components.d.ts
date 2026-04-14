@@ -93,7 +93,6 @@ declare module 'vue' {
     IconLocalActivity: typeof import('~icons/local/activity')['default']
     IconLocalBanner: typeof import('~icons/local/banner')['default']
     IconLocalCast: typeof import('~icons/local/cast')['default']
-    IconLocalLogo: typeof import('~icons/local/logo')['default']
     'IconMaterialSymbolsLight:rotate90DegreesCcwOutlineRounded': typeof import('~icons/material-symbols-light/rotate90-degrees-ccw-outline-rounded')['default']
     'IconMdi:printer': typeof import('~icons/mdi/printer')['default']
     IconMdiArrowDownThin: typeof import('~icons/mdi/arrow-down-thin')['default']

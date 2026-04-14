@@ -134,7 +134,7 @@ export function createRequest<ResponseData, ApiData, State extends Record<string
 /**
  * create a flat request instance
  *
- * The response data is a flat object: { data: any, error: AxiosError }
+ * The response data is a flat object: { data: unknown, error: AxiosError }
  *
  * @param axiosConfig axios config
  * @param options request options
