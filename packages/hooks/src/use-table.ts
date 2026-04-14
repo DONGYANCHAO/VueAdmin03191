@@ -16,7 +16,7 @@ type Transform<ResponseData, ApiData, Pagination extends boolean> = (
   response: ResponseData
 ) => GetApiData<ApiData, Pagination>;
 
-export type TableColumnCheckTitle = string | ((...args: any) => VNodeChild);
+export type TableColumnCheckTitle = string | ((...args: unknown[]) => VNodeChild);
 
 export type TableColumnCheck = {
   prop: string;
@@ -62,6 +62,7 @@ export interface UseTableOptions<ResponseData, ApiData, Column, Pagination exten
   immediate?: boolean;
 }
 
+/* #__PURE__ */
 export default function useTable<ResponseData, ApiData, Column, Pagination extends boolean>(
   options: UseTableOptions<ResponseData, ApiData, Column, Pagination>
 ) {

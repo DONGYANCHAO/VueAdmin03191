@@ -57,13 +57,16 @@ import type { InjectionKey } from 'vue';
  * @param contextName Context name
  * @param fn Context function
  */
-export default function useContext<T extends (...args: any[]) => any>(contextName: string, fn: T) {
+export default function useContext<T extends (...args: unknown[]) => Record<string, unknown>>(
+  contextName: string,
+  fn: T
+) {
   type Context = ReturnType<T>;
 
   const { useProvide, useInject: useStore } = createContext<Context>(contextName);
 
   function setupStore(...args: Parameters<T>) {
-    const context: Context = fn(...args);
+    const context = fn(...args) as Context;
     return useProvide(context);
   }
 

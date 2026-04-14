@@ -42,11 +42,11 @@ export interface RequestOptions<AG extends AlovaGenerics> {
    *
    * @param error
    */
-  onError?: (error: any, response: AG['Response'] | null, methodInstance: Method<AG>) => any | Promise<any>;
+  onError?: (error: unknown, response: AG['Response'] | null, methodInstance: Method<AG>) => unknown | Promise<unknown>;
   /**
    * transform backend response when the responseType is json
    *
    * @param response alova response
    */
-  transformBackendResponse: (response: AG['Response']) => any;
+  transformBackendResponse: (response: AG['Response']) => unknown;
 }

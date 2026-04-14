@@ -5,6 +5,7 @@ import { ref } from 'vue';
  *
  * @param initValue Init value
  */
+/* #__PURE__ */
 export default function useBoolean(initValue = false) {
   const bool = ref(initValue);
 

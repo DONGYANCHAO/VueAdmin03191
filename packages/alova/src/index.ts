@@ -1,29 +1,20 @@
 import { createAlova } from 'alova';
-import type { AlovaDefaultCacheAdapter, AlovaGenerics, AlovaGlobalCacheAdapter, AlovaRequestAdapter } from 'alova';
+import type { AlovaGenerics, AlovaRequestAdapter } from 'alova';
 import VueHook from 'alova/vue';
 import type { VueHookType } from 'alova/vue';
 import adapterFetch from 'alova/fetch';
 import { createServerTokenAuthentication } from 'alova/client';
-import type { FetchRequestInit } from 'alova/fetch';
 import { BACKEND_ERROR_CODE } from './constant';
 import type { CustomAlovaConfig, RequestOptions } from './type';
 
-export const createAlovaRequest = <
-  RequestConfig = FetchRequestInit,
-  ResponseType = Response,
-  ResponseHeader = Headers,
-  L1Cache extends AlovaGlobalCacheAdapter = AlovaDefaultCacheAdapter,
-  L2Cache extends AlovaGlobalCacheAdapter = AlovaDefaultCacheAdapter
->(
-  customConfig: CustomAlovaConfig<
-    AlovaGenerics<any, any, RequestConfig, ResponseType, ResponseHeader, L1Cache, L2Cache, any>
-  >,
-  options: RequestOptions<AlovaGenerics<any, any, RequestConfig, ResponseType, ResponseHeader, L1Cache, L2Cache, any>>
-) => {
+type AG = AlovaGenerics;
+type DefaultRequestAdapter = AlovaRequestAdapter<AG['RequestConfig'], AG['Response'], AG['ResponseHeader']>;
+
+export const createAlovaRequest = (customConfig: CustomAlovaConfig<AG>, options: RequestOptions<AG>) => {
   const { tokenRefresher } = options;
   const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication<
     VueHookType,
-    AlovaRequestAdapter<RequestConfig, ResponseType, ResponseHeader>
+    DefaultRequestAdapter
   >({
     refreshTokenOnSuccess: {
       isExpired: (response, method) => tokenRefresher?.isExpired(response, method) || false,
@@ -38,20 +29,20 @@ export const createAlovaRequest = <
   const instance = createAlova({
     ...customConfig,
     timeout: customConfig.timeout ?? 10 * 1000,
-    requestAdapter: (customConfig.requestAdapter as any) ?? adapterFetch(),
+    requestAdapter: (customConfig.requestAdapter as DefaultRequestAdapter) ?? adapterFetch(),
     statesHook: VueHook,
-    beforeRequest: onAuthRequired(options.onRequest as any),
+    beforeRequest: onAuthRequired(options.onRequest as (method: any) => any),
     responded: onResponseRefreshToken({
       onSuccess: async (response, method) => {
-        // check if http status is success
-        let error: any = null;
-        let transformedData: any = null;
+        let error: unknown = null;
+        let transformedData: unknown = null;
         try {
           if (await options.isBackendSuccess(response)) {
             transformedData = await options.transformBackendResponse(response);
           } else {
-            error = new Error('the backend request error');
-            error.code = BACKEND_ERROR_CODE;
+            const backendError = new Error('the backend request error') as Error & { code: string };
+            backendError.code = BACKEND_ERROR_CODE;
+            error = backendError;
           }
         } catch (err) {
           error = err;
@@ -65,7 +56,9 @@ export const createAlovaRequest = <
         return transformedData;
       },
       onComplete: options.onComplete,
-      onError: (error, method) => options.onError?.(error, null, method)
+      onError: (error: any, method: any) => {
+        options.onError?.(error, null, method);
+      }
     })
   });
 

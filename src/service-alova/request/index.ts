@@ -59,7 +59,7 @@ export const alova = createAlovaRequest(
     async onError(error, response) {
       const authStore = useAuthStore();
 
-      let message = error.message;
+      let message = (error as Error).message;
       let responseCode = '';
       if (response) {
         const data = await response?.clone().json();

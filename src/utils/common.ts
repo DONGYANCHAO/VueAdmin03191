@@ -18,6 +18,7 @@ import { $t } from '@/locales';
  *
  * @param record
  */
+/* #__PURE__ */
 export function transformRecordToOption<T extends Record<string, string>>(record: T) {
   return Object.entries(record).map(([value, label]) => ({
     value,
@@ -30,6 +31,7 @@ export function transformRecordToOption<T extends Record<string, string>>(record
  *
  * @param options
  */
+/* #__PURE__ */
 export function translateOptions(options: CommonType.Option<string, App.I18n.I18nKey>[]) {
   return options.map(option => ({
     ...option,
@@ -42,6 +44,7 @@ export function translateOptions(options: CommonType.Option<string, App.I18n.I18
  *
  * @param className
  */
+/* #__PURE__ */
 export function toggleHtmlClass(className: string) {
   function add() {
     document.documentElement.classList.add(className);

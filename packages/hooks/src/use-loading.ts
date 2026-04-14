@@ -5,6 +5,7 @@ import useBoolean from './use-boolean';
  *
  * @param initValue Init value
  */
+/* #__PURE__ */
 export default function useLoading(initValue = false) {
   const { bool: loading, setTrue: startLoading, setFalse: endLoading } = useBoolean(initValue);
 
